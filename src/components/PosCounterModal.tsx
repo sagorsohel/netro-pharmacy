@@ -67,7 +67,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
 
   const handleCompleteSale = () => {
     if (cart.length === 0) {
-      alert('অনুগ্রহ করে অন্তত একটি ওষুধ কার্টে যুক্ত করুন!');
+      alert('Please add at least one medicine to the cart!');
       return;
     }
 
@@ -89,7 +89,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
     dispatch(checkout());
     onClose();
     onSaleSuccess(
-      `বিক্রি সফল! ৳ ${grandTotal} বিল তৈরি হয়েছে এবং কাস্টমারের WhatsApp-এ PDF পাঠানো হয়েছে।`
+      `Sale completed! $${grandTotal} bill generated and sent to customer via WhatsApp.`
     );
   };
 
@@ -104,10 +104,10 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-slate-900 text-lg">
-                পয়েন্ট অব সেল (POS) কাউন্টার বিলিং
+                Point-of-Sale (POS) Counter Billing
               </h3>
               <p className="text-xs text-slate-500">
-                ওষুধ নির্বাচন, মাল্টি-ইউনিট প্রাইসিং এবং স্বয়ংক্রিয় WhatsApp PDF ইনভয়েসিং।
+                Select medicine, multi-unit retail pricing, and automated WhatsApp PDF invoicing.
               </p>
             </div>
           </div>
@@ -123,19 +123,19 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="text-xs font-semibold text-slate-700 block mb-1 flex items-center gap-1">
-              <User className="h-3.5 w-3.5 text-slate-400" /> কাস্টমার নাম
+              <User className="h-3.5 w-3.5 text-slate-400" /> Customer Name
             </label>
             <Input
               value={customerName}
               onChange={(e) => dispatch(setCustomerInfo({ customerName: e.target.value }))}
-              placeholder="e.g. জনাব আহমেদ"
+              placeholder="e.g. Mr. Ahmed"
               className="h-9 bg-white text-xs rounded-xl"
             />
           </div>
 
           <div>
             <label className="text-xs font-semibold text-slate-700 block mb-1 flex items-center gap-1">
-              <Phone className="h-3.5 w-3.5 text-slate-400" /> মোবাইল (WhatsApp ইনভয়েসের জন্য)
+              <Phone className="h-3.5 w-3.5 text-slate-400" /> Mobile (for WhatsApp Invoice)
             </label>
             <Input
               value={customerPhone}
@@ -147,7 +147,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
 
           <div>
             <label className="text-xs font-semibold text-slate-700 block mb-1 flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5 text-primary" /> মেম্বার আইডি (১০% অটো ছাড়)
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Member ID (10% Auto Discount)
             </label>
             <div className="flex gap-2">
               <Input
@@ -166,11 +166,11 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
         {/* Section 2: Medicine Picker & Multi-Unit Selector */}
         <div className="p-4 bg-slate-50/70 border border-slate-200 rounded-2xl space-y-3">
           <div className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-            ওষুধ যোগ করুন
+            Add Medicine
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
             <div className="sm:col-span-5">
-              <label className="text-xs text-slate-600 block mb-1 font-medium">মেডিসিন বাছাই</label>
+              <label className="text-xs text-slate-600 block mb-1 font-medium">Select Medicine</label>
               <select
                 value={selectedMedId}
                 onChange={(e) => setSelectedMedId(e.target.value)}
@@ -178,27 +178,27 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
               >
                 {medicines.map((m) => (
                   <option key={m.id} value={m.id}>
-                    {m.name} ({m.totalPieces} pcs স্টকে আছে)
+                    {m.name} ({m.totalPieces} pcs in stock)
                   </option>
                 ))}
               </select>
             </div>
 
             <div className="sm:col-span-3">
-              <label className="text-xs text-slate-600 block mb-1 font-medium">বিক্রয় ইউনিট</label>
+              <label className="text-xs text-slate-600 block mb-1 font-medium">Selling Unit</label>
               <select
                 value={unitType}
                 onChange={(e) => setUnitType(e.target.value as any)}
                 className="w-full h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-800 focus:border-primary"
               >
-                <option value="strip">পাতা / স্ট্রিপ (৳ {currentMed?.stripSellingPrice})</option>
-                <option value="piece">খুচরা পিস (৳ {currentMed?.unitSellingPrice})</option>
-                <option value="carton">কার্টুন (৳ {currentMed ? currentMed.stripSellingPrice * currentMed.packetPerCarton : 0})</option>
+                <option value="strip">Strip / Packet (${currentMed?.stripSellingPrice})</option>
+                <option value="piece">Retail Piece (${currentMed?.unitSellingPrice})</option>
+                <option value="carton">Carton (${currentMed ? currentMed.stripSellingPrice * currentMed.packetPerCarton : 0})</option>
               </select>
             </div>
 
             <div className="sm:col-span-2">
-              <label className="text-xs text-slate-600 block mb-1 font-medium">পরিমাণ</label>
+              <label className="text-xs text-slate-600 block mb-1 font-medium">Quantity</label>
               <input
                 type="number"
                 min="1"
@@ -214,7 +214,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
                 onClick={handleAddItem}
                 className="w-full h-9 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-xl cursor-pointer"
               >
-                কার্টে যোগ
+                Add to Cart
               </Button>
             </div>
           </div>
@@ -225,19 +225,19 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
           <table className="w-full text-xs text-left">
             <thead className="bg-slate-50 text-slate-600 font-semibold uppercase text-[10px] border-b border-slate-200">
               <tr>
-                <th className="py-2.5 px-4">মেডিসিন</th>
-                <th className="py-2.5 px-4">ইউনিট</th>
-                <th className="py-2.5 px-4">একক দাম</th>
-                <th className="py-2.5 px-4">পরিমাণ</th>
-                <th className="py-2.5 px-4">মোট</th>
-                <th className="py-2.5 px-4 text-center">রিমুভ</th>
+                <th className="py-2.5 px-4">Medicine</th>
+                <th className="py-2.5 px-4">Unit</th>
+                <th className="py-2.5 px-4">Unit Price</th>
+                <th className="py-2.5 px-4">Quantity</th>
+                <th className="py-2.5 px-4">Total</th>
+                <th className="py-2.5 px-4 text-center">Remove</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {cart.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-6 text-slate-400">
-                    কার্টে কোনো ওষুধ যুক্ত করা হয়নি। উপরের ড্রপডাউন থেকে সিলেক্ট করুন।
+                    No medicine in cart. Select medicine from the dropdown above.
                   </td>
                 </tr>
               ) : (
@@ -246,12 +246,12 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
                     <td className="py-3 px-4 font-bold text-slate-900">{item.name}</td>
                     <td className="py-3 px-4">
                       <span className="capitalize px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-medium">
-                        {item.unitType === 'strip' ? 'পাতা' : item.unitType === 'piece' ? 'পিস' : 'কার্টুন'}
+                        {item.unitType === 'strip' ? 'Strip' : item.unitType === 'piece' ? 'Piece' : 'Carton'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-semibold text-slate-800">৳ {item.unitPrice.toFixed(2)}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-800">${item.unitPrice.toFixed(2)}</td>
                     <td className="py-3 px-4 font-bold text-slate-900">{item.quantity}</td>
-                    <td className="py-3 px-4 font-black text-slate-900">৳ {item.totalPrice.toFixed(2)}</td>
+                    <td className="py-3 px-4 font-black text-slate-900">${item.totalPrice.toFixed(2)}</td>
                     <td className="py-3 px-4 text-center">
                       <button
                         onClick={() => dispatch(removeFromCart(idx))}
@@ -276,20 +276,20 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
               onChange={(e) => dispatch(setCustomerInfo({ hasPrescription: e.target.checked }))}
               className="rounded border-slate-300 text-primary focus:ring-primary"
             />
-            <span>প্রেসক্রিপশন দেখে ওষুধ বিক্রি করা হয়েছে</span>
+            <span>Prescription verified for dispensed medicines</span>
           </label>
 
           <div className="text-right space-y-1">
             <div className="text-xs text-slate-500">
-              সাবটোটাল: <span className="font-semibold text-slate-800">৳ {subtotal.toFixed(2)}</span>
+              Subtotal: <span className="font-semibold text-slate-800">${subtotal.toFixed(2)}</span>
             </div>
             {isMember && (
               <div className="text-xs text-emerald-600 font-semibold flex items-center justify-end gap-1">
-                <Sparkles className="h-3 w-3" /> মেম্বারশিপ ছাড় (১০%): -৳ {discountAmount.toFixed(2)}
+                <Sparkles className="h-3 w-3" /> Membership Discount (10%): -${discountAmount.toFixed(2)}
               </div>
             )}
             <div className="text-base font-black text-slate-900">
-              সর্বমোট বিল: <span className="text-primary text-xl">৳ {grandTotal.toFixed(2)}</span>
+              Grand Total: <span className="text-primary text-xl">${grandTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -302,7 +302,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
             onClick={onClose}
             className="rounded-xl text-xs h-10 px-5 cursor-pointer"
           >
-            বাতিল
+            Cancel
           </Button>
 
           <Button
@@ -311,7 +311,7 @@ export const PosCounterModal: React.FC<PosCounterModalProps> = ({
             className="rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-semibold h-10 px-6 gap-2 shadow-lg shadow-primary/25 cursor-pointer"
           >
             <Send className="h-4 w-4" />
-            <span>বিল সম্পন্ন ও WhatsApp-এ ইনভয়েস পাঠান</span>
+            <span>Complete Sale & Send WhatsApp Invoice</span>
           </Button>
         </div>
       </div>

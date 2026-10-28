@@ -47,10 +47,10 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
             <span>Section 3.1 Multi-Unit Stock & FEFO Expiry</span>
           </div>
           <h3 className="text-lg font-bold text-slate-900">
-            মাল্টি-ইউনিট ইনভেন্টরি স্টক (কার্টুন ➔ প্যাকেট/পাতা ➔ পিস)
+            Multi-Unit Inventory Stock (Carton ➔ Packet/Strip ➔ Piece)
           </h3>
           <p className="text-xs text-slate-500">
-            সিস্টেমে একই ওষুধ স্বয়ংক্রিয়ভাবে কার্টুন, প্যাকেট ও পিস ইউনিটে হিসাব রাখে এবং বিক্রি অনুযায়ী কনভার্ট করে।
+            The system automatically tracks carton, strip, and piece units and converts them based on sales in real-time.
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              সব ({medicines.length})
+              All ({medicines.length})
             </button>
             <button
               onClick={() => dispatch(setFilterStatus('low-stock'))}
@@ -75,7 +75,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              লো-স্টক
+              Low Stock
             </button>
             <button
               onClick={() => dispatch(setFilterStatus('near-expiry'))}
@@ -85,7 +85,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              FEFO মেয়াদ
+              FEFO Expiry
             </button>
           </div>
 
@@ -94,7 +94,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
             className="bg-primary hover:bg-primary-hover text-white text-xs font-semibold gap-1.5 rounded-xl cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>স্টক-ইন এন্ট্রি</span>
+            <span>Stock-In Entry</span>
           </Button>
         </div>
       </div>
@@ -104,13 +104,13 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
         <table className="w-full text-left text-xs text-slate-600">
           <thead className="bg-slate-50 text-slate-700 font-semibold uppercase text-[10px] tracking-wider border-b border-slate-200">
             <tr>
-              <th className="py-3.5 px-6">ওষুধ ও জেনেরিক নাম</th>
-              <th className="py-3.5 px-6">ব্যাচ ও মেয়াদ (FEFO)</th>
-              <th className="py-3.5 px-6">কার্টুন সংখ্যা</th>
-              <th className="py-3.5 px-6">প্যাকেট / পাতা</th>
-              <th className="py-3.5 px-6">মোট পিস (Live Stock)</th>
-              <th className="py-3.5 px-6">বিক্রয় মূল্য / পিস</th>
-              <th className="py-3.5 px-6">স্ট্যাটাস</th>
+              <th className="py-3.5 px-6">Medicine & Generic</th>
+              <th className="py-3.5 px-6">Batch & Expiry (FEFO)</th>
+              <th className="py-3.5 px-6">Carton Qty</th>
+              <th className="py-3.5 px-6">Packets / Strips</th>
+              <th className="py-3.5 px-6">Total Pieces (Live Stock)</th>
+              <th className="py-3.5 px-6">Selling Price / Unit</th>
+              <th className="py-3.5 px-6">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -134,41 +134,41 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({ onOpenStockIn })
                   </td>
                   <td className="py-4 px-6">
                     <span className="font-semibold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg">
-                      {item.cartonQty} কার্টুন
+                      {item.cartonQty} Cartons
                     </span>
                   </td>
                   <td className="py-4 px-6">
                     <span className="font-semibold text-slate-900">
-                      {item.cartonQty * item.packetPerCarton} প্যাকেট
+                      {item.cartonQty * item.packetPerCarton} Strips
                     </span>
                     <span className="text-[10px] text-slate-400 block">
-                      ({item.packetPerCarton} প্যাকেট/কার্টুন)
+                      ({item.packetPerCarton} strips/carton)
                     </span>
                   </td>
                   <td className="py-4 px-6">
                     <div className={`font-black text-sm ${isLow ? 'text-red-600' : 'text-primary'}`}>
-                      {item.totalPieces.toLocaleString()} পিস
+                      {item.totalPieces.toLocaleString()} Pcs
                     </div>
                     <span className="text-[10px] text-slate-400">
-                      (স্বয়ংক্রিয় কনভার্সন)
+                      (Auto Converted)
                     </span>
                   </td>
                   <td className="py-4 px-6">
-                    <div className="font-semibold text-slate-900">৳ {item.unitSellingPrice.toFixed(2)} / পিস</div>
-                    <div className="text-[10px] text-slate-500">৳ {item.stripSellingPrice.toFixed(2)} / পাতা</div>
+                    <div className="font-semibold text-slate-900">${item.unitSellingPrice.toFixed(2)} / piece</div>
+                    <div className="text-[10px] text-slate-500">${item.stripSellingPrice.toFixed(2)} / strip</div>
                   </td>
                   <td className="py-4 px-6">
                     {isLow ? (
                       <Badge className="bg-red-100 text-red-800 border-red-300 font-semibold animate-pulse flex items-center gap-1 w-fit">
-                        <AlertTriangle className="h-3 w-3" /> লো-স্টক এলার্ট
+                        <AlertTriangle className="h-3 w-3" /> Low Stock Alert
                       </Badge>
                     ) : isNearExpiry ? (
                       <Badge className="bg-amber-100 text-amber-800 border-amber-300 font-semibold flex items-center gap-1 w-fit">
-                        <CalendarClock className="h-3 w-3" /> FEFO মেয়াদোত্তীর্ণ
+                        <CalendarClock className="h-3 w-3" /> FEFO Near Expiry
                       </Badge>
                     ) : (
                       <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 font-semibold w-fit">
-                        পর্যাপ্ত স্টক
+                        In Stock
                       </Badge>
                     )}
                   </td>

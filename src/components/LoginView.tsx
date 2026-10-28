@@ -36,7 +36,7 @@ export const LoginView: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      setError('অনুগ্রহ করে আপনার ইউজার আইডি বা ইমেইল লিখুন');
+      setError('Please enter your email or username');
       return;
     }
     setError('');
@@ -101,10 +101,10 @@ export const LoginView: React.FC = () => {
             {/* Headline */}
             <div className="space-y-2 pt-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-snug">
-                আধুনিক ফার্মেসি ও পয়েন্ট অব সেলস প্ল্যাটফর্ম
+                Modern Pharmacy & Point-of-Sale System
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                মাল্টি-ইউনিট স্টক কনভার্সন (কার্টুন ➔ পাতা ➔ পিস), FEFO এক্সপায়ারি এলার্ট এবং দ্রুত WhatsApp ইনভয়েসিং।
+                Multi-unit stock conversion (Carton ➔ Strip ➔ Piece), FEFO expiry alerts, and fast WhatsApp invoicing.
               </p>
             </div>
 
@@ -113,9 +113,9 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Boxes className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">মাল্টি-ইউনিট স্টক ট্র্যাকিং</h4>
+                  <h4 className="text-xs font-semibold text-white">Multi-Unit Stock Tracking</h4>
                   <p className="text-[11px] text-slate-300">
-                    কার্টুন, পাতা ও পিস স্বয়ংক্রিয় কনভার্সন ও লাইভ স্টক আপডেট।
+                    Automatic carton, strip, and piece conversions with live stock counts.
                   </p>
                 </div>
               </div>
@@ -123,9 +123,9 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Receipt className="h-5 w-5 text-sky-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">কাউন্টার POS ও ডিজিটাল বিল</h4>
+                  <h4 className="text-xs font-semibold text-white">Counter POS & Digital Billing</h4>
                   <p className="text-[11px] text-slate-300">
-                    কাস্টমারের WhatsApp-এ সরাসরি PDF ইনভয়েস ও SMS রসিদ পাঠানো।
+                    Direct digital PDF invoices via WhatsApp and SMS receipt delivery.
                   </p>
                 </div>
               </div>
@@ -133,9 +133,9 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Pill className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">FEFO এক্সপায়ারি মনিটরিং</h4>
+                  <h4 className="text-xs font-semibold text-white">FEFO Expiry Monitoring</h4>
                   <p className="text-[11px] text-slate-300">
-                    মেয়াদোত্তীর্ণ হওয়া রোধে স্বয়ংক্রিয় নোটিফিকেশন ও লো-স্টক এলার্ট।
+                    Automated expiry alerts and low-stock replenishment notifications.
                   </p>
                 </div>
               </div>
@@ -157,13 +157,13 @@ export const LoginView: React.FC = () => {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-primary border border-primary/20 mb-3">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span>ফার্মেসি পোর্টালে লগইন</span>
+                <span>Pharmacy Portal Access</span>
               </div>
               <h3 className="text-2xl font-bold tracking-tight text-slate-900">
-                ফার্মাসিস্ট ও ক্যাশিয়ার লগইন
+                Pharmacist & Cashier Sign In
               </h3>
               <p className="text-sm text-slate-500 mt-1">
-                আপনার ফার্মেসি একাউন্টে লগইন করে ড্যাশবোর্ডে প্রবেশ করুন।
+                Enter your credentials to access the pharmacy management system.
               </p>
             </div>
 
@@ -177,7 +177,7 @@ export const LoginView: React.FC = () => {
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <Mail className="h-3.5 w-3.5 text-slate-400" />
-                  ইমেইল বা ইউজারনেম
+                  Email or Username
                 </label>
                 <Input
                   type="text"
@@ -193,17 +193,17 @@ export const LoginView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Lock className="h-3.5 w-3.5 text-slate-400" />
-                    পাসওয়ার্ড
+                    Password
                   </label>
                   <a
                     href="#forgot"
                     onClick={(e) => {
                       e.preventDefault();
-                      alert('পাসওয়ার্ড রিসেটের জন্য প্রধান অ্যাডমিনের সাথে যোগাযোগ করুন।');
+                      alert('Please contact the system administrator to reset your password.');
                     }}
                     className="text-xs text-secondary hover:underline font-medium"
                   >
-                    পাসওয়ার্ড ভুলে গেছেন?
+                    Forgot password?
                   </a>
                 </div>
                 <Input
@@ -224,7 +224,7 @@ export const LoginView: React.FC = () => {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="rounded border-slate-300 text-primary focus:ring-primary"
                   />
-                  <span>লগইন মনে রাখুন</span>
+                  <span>Remember me</span>
                 </label>
               </div>
 
@@ -234,10 +234,10 @@ export const LoginView: React.FC = () => {
                 className="w-full h-11 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold text-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isLoading ? (
-                  <span className="flex items-center gap-2">লগইন হচ্ছে...</span>
+                  <span className="flex items-center gap-2">Signing in...</span>
                 ) : (
                   <>
-                    <span>ফার্মেসি ড্যাশবোর্ডে প্রবেশ করুন</span>
+                    <span>Enter Pharmacy Dashboard</span>
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -247,7 +247,7 @@ export const LoginView: React.FC = () => {
             {/* Quick Demo Access Bar */}
             <div className="pt-4 border-t border-slate-100">
               <div className="text-center text-xs text-slate-400 mb-3 font-medium">
-                — অথবা এক ক্লিকে ডেমো লগইন করুন —
+                — Or Quick 1-Click Demo Login —
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -256,7 +256,7 @@ export const LoginView: React.FC = () => {
                   className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-primary/40 text-slate-700 hover:text-primary transition-all text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>Pharmacist ডেমো</span>
+                  <span>Pharmacist Demo</span>
                 </button>
                 <button
                   type="button"
@@ -264,7 +264,7 @@ export const LoginView: React.FC = () => {
                   className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:border-secondary/40 text-slate-700 hover:text-secondary transition-all text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Receipt className="h-4 w-4 text-secondary" />
-                  <span>Cashier ডেমো</span>
+                  <span>Cashier Demo</span>
                 </button>
               </div>
             </div>

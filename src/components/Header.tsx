@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPos, onOpenStockIn }) => {
           />
           <button
             onClick={handleLogout}
-            title="লগআউট"
+            title="Logout"
             className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 cursor-pointer transition-colors"
           >
             <LogOut className="h-4 w-4" />

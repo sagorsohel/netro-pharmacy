@@ -37,7 +37,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      alert('ওষুধের নাম লিখুন');
+      alert('Please enter medicine name');
       return;
     }
 
@@ -60,7 +60,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
 
     onClose();
     onSuccess(
-      `নতুন স্টক এন্ট্রি সফল! ${name} (${totalCalculatedPieces} পিস) ইনভেন্টরিতে যুক্ত হয়েছে।`
+      `New stock entry successful! ${name} (${totalCalculatedPieces} Pcs) added to inventory.`
     );
   };
 
@@ -73,9 +73,9 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               <PackagePlus className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-lg">নতুন ওষুধ স্টক-ইন ও চালান এন্ট্রি</h3>
+              <h3 className="font-bold text-slate-900 text-lg">New Medicine Stock-In & Inward Entry</h3>
               <p className="text-xs text-slate-500">
-                কার্টুন, প্যাকেট ও পিস স্বয়ংক্রিয় কনভার্সন এবং বিক্রয় মূল্য নির্ধারণ।
+                Carton, packet, and piece automatic conversion and retail pricing setup.
               </p>
             </div>
           </div>
@@ -90,7 +90,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">ওষুধের ব্র্যান্ডের নাম *</label>
+              <label className="font-semibold text-slate-700 block mb-1">Medicine Brand Name *</label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -100,7 +100,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">জেনেরিক নাম</label>
+              <label className="font-semibold text-slate-700 block mb-1">Generic Name</label>
               <Input
                 value={generic}
                 onChange={(e) => setGeneric(e.target.value)}
@@ -112,7 +112,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">ক্যাটাগরি</label>
+              <label className="font-semibold text-slate-700 block mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -126,7 +126,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               </select>
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">ব্যাচ নম্বর</label>
+              <label className="font-semibold text-slate-700 block mb-1">Batch Number</label>
               <Input
                 value={batchNo}
                 onChange={(e) => setBatchNo(e.target.value)}
@@ -134,7 +134,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">মেয়াদের তারিখ (FEFO)</label>
+              <label className="font-semibold text-slate-700 block mb-1">Expiry Date (FEFO)</label>
               <Input
                 type="date"
                 value={expiryDate}
@@ -148,11 +148,11 @@ export const StockInModal: React.FC<StockInModalProps> = ({
           <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-3">
             <div className="font-bold text-emerald-900 flex items-center gap-1.5">
               <Boxes className="h-4 w-4 text-primary" />
-              <span>মাল্টি-ইউনিট স্টক কনভার্সন সেটআপ</span>
+              <span>Multi-Unit Stock Conversion Setup</span>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">কার্টুন সংখ্যা</label>
+                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">Carton Quantity</label>
                 <Input
                   type="number"
                   min="1"
@@ -162,7 +162,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
                 />
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">প্রতি কার্টুনে প্যাকেট/পাতা</label>
+                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">Packets/Strips per Carton</label>
                 <Input
                   type="number"
                   min="1"
@@ -172,7 +172,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
                 />
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">প্রতি প্যাকেটে পিস</label>
+                <label className="text-[11px] font-semibold text-emerald-800 block mb-1">Pieces per Packet</label>
                 <Input
                   type="number"
                   min="1"
@@ -183,9 +183,9 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               </div>
             </div>
             <div className="text-xs font-semibold text-emerald-950 flex justify-between pt-1 border-t border-emerald-200">
-              <span>স্বয়ংক্রিয় গণনা (মোট স্টক):</span>
+              <span>Auto Calculated (Total Stock):</span>
               <span className="font-black text-primary text-sm">
-                {totalCalculatedPieces.toLocaleString()} পিস ওষুধ
+                {totalCalculatedPieces.toLocaleString()} Pcs Medicine
               </span>
             </div>
           </div>
@@ -193,7 +193,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
           {/* Pricing & Supplier */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">বিক্রয় মূল্য (পিস)</label>
+              <label className="font-semibold text-slate-700 block mb-1">Selling Price / Piece ($)</label>
               <Input
                 type="number"
                 step="0.1"
@@ -203,7 +203,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">বিক্রয় মূল্য (পাতা/প্যাকেট)</label>
+              <label className="font-semibold text-slate-700 block mb-1">Selling Price / Strip ($)</label>
               <Input
                 type="number"
                 step="0.5"
@@ -213,7 +213,7 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">সাপ্লায়ার কোম্পানি</label>
+              <label className="font-semibold text-slate-700 block mb-1">Supplier Company</label>
               <Input
                 value={supplier}
                 onChange={(e) => setSupplier(e.target.value)}
@@ -230,14 +230,14 @@ export const StockInModal: React.FC<StockInModalProps> = ({
               onClick={onClose}
               className="rounded-xl text-xs h-10 px-5 cursor-pointer"
             >
-              বাতিল
+              Cancel
             </Button>
             <Button
               type="submit"
               className="rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-semibold h-10 px-6 gap-2 shadow-lg shadow-primary/25 cursor-pointer"
             >
               <PackagePlus className="h-4 w-4" />
-              <span>স্টক সংরক্ষণ করুন</span>
+              <span>Save Stock Entry</span>
             </Button>
           </div>
         </form>

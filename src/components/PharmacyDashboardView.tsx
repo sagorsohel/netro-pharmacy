@@ -56,9 +56,9 @@ export const PharmacyDashboardView: React.FC = () => {
                 <Pill className="h-3.5 w-3.5 text-cream" />
                 <span>Netro Pharmacy Inventory & POS System</span>
               </div>
-              <h2 className="text-2xl font-black tracking-tight">ফার্মেসি ম্যানেজমেন্ট ও পয়েন্ট অব সেলস</h2>
+              <h2 className="text-2xl font-black tracking-tight">Pharmacy Management & Point-of-Sale</h2>
               <p className="text-emerald-100 text-sm mt-1 max-w-xl">
-                মাল্টি-ইউনিট স্টক কনভার্সন (কার্টুন ➔ প্যাকেট ➔ পিস), FEFO এক্সপায়ারি ট্র্যাকিং, WhatsApp ইনভয়েস এবং সেন্ট্রালাইজড ব্রাঞ্চ কন্ট্রোল।
+                Multi-unit stock conversion (Carton ➔ Strip ➔ Piece), FEFO expiry tracking, WhatsApp digital invoicing, and centralized branch control.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -67,7 +67,7 @@ export const PharmacyDashboardView: React.FC = () => {
                 className="bg-white text-primary hover:bg-emerald-50 font-bold px-4 py-2.5 rounded-xl shadow-lg text-xs gap-2 cursor-pointer"
               >
                 <ShoppingCart className="h-4 w-4" />
-                <span>কাউন্টার POS বিল</span>
+                <span>New POS Sale</span>
               </Button>
             </div>
           </div>

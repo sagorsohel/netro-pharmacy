@@ -25,13 +25,13 @@ export const StatsCards: React.FC = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            আজকের ফার্মেসি বিক্রি
+            Today's Pharmacy Sales
           </div>
           <div className="text-2xl font-black text-slate-900 mt-1">
-            ৳ {totalSalesToday.toLocaleString()}
+            ${totalSalesToday.toLocaleString()}
           </div>
           <div className="text-xs text-primary font-semibold flex items-center gap-1 mt-1">
-            <TrendingUp className="h-3.5 w-3.5" /> +১২.৫% বৃদ্ধি ({invoices.length} টি ইনভয়েস)
+            <TrendingUp className="h-3.5 w-3.5" /> +12.5% increase ({invoices.length} invoices)
           </div>
         </div>
         <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -43,11 +43,11 @@ export const StatsCards: React.FC = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            মোট স্টক ভ্যালুয়েশন
+            Total Stock Valuation
           </div>
-          <div className="text-2xl font-black text-slate-900 mt-1">৳ ৮,৪৫,০০০</div>
+          <div className="text-2xl font-black text-slate-900 mt-1">$845,000</div>
           <div className="text-xs text-slate-500 font-medium mt-1">
-            {medicines.length} টি সক্রিয় ব্র্যান্ডেড ওষুধ
+            {medicines.length} Active Branded Medicines
           </div>
         </div>
         <div className="h-12 w-12 rounded-2xl bg-sky-50 flex items-center justify-center text-secondary">
@@ -59,13 +59,13 @@ export const StatsCards: React.FC = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            FEFO এক্সপায়ারি এলার্ট
+            FEFO Expiry Alerts
           </div>
           <div className="text-2xl font-black text-amber-600 mt-1">
-            {nearExpiryCount} টি ব্যাচ
+            {nearExpiryCount} Batches
           </div>
           <div className="text-xs text-amber-600 font-semibold flex items-center gap-1 mt-1">
-            <CalendarClock className="h-3.5 w-3.5" /> ৬০ দিনের মধ্যে মেয়াদ শেষ
+            <CalendarClock className="h-3.5 w-3.5" /> Expiring within 60 days
           </div>
         </div>
         <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
@@ -77,13 +77,13 @@ export const StatsCards: React.FC = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            লো-স্টক সতর্কবার্তা
+            Low-Stock Alerts
           </div>
           <div className="text-2xl font-black text-red-600 mt-1">
-            {lowStockCount} টি আইটেম
+            {lowStockCount} Items
           </div>
           <div className="text-xs text-red-600 font-semibold flex items-center gap-1 mt-1">
-            রি-অর্ডার থ্রেশহোল্ড অতিক্রম
+            Reorder threshold exceeded
           </div>
         </div>
         <div className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600">
