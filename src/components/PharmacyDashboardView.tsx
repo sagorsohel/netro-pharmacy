@@ -45,7 +45,10 @@ export const PharmacyDashboardView: React.FC = () => {
           onOpenStockIn={() => setIsStockInOpen(true)}
         />
 
-        <main className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8">
+        <main
+          className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8 no-scrollbar"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {/* Welcome Banner */}
           <div className="bg-gradient-to-r from-primary via-primary-hover to-emerald-950 rounded-3xl p-7 text-white shadow-xl shadow-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>

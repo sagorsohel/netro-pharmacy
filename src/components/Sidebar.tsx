@@ -83,8 +83,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      {/* Navigation - Ultra Clean & No Scrollbar */}
+      <nav
+        className="flex-1 px-3 py-3 space-y-1 overflow-y-auto no-scrollbar"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         <div className="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
           Pharmacy Operations
         </div>
@@ -98,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 setCurrentTab(item.id);
                 if (item.action) item.action();
               }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                 isActive
                   ? 'bg-primary text-white shadow-md shadow-primary/30 font-semibold'
                   : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
