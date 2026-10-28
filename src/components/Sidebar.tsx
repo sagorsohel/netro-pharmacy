@@ -1,4 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { logout } from '../store/slices/authSlice';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -11,7 +14,7 @@ import {
   BarChart3,
   ShieldCheck,
   CheckCircle2,
-  Settings
+  LogOut
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,6 +30,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenPos,
   onOpenStockIn,
 }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const user = useAppSelector((state) => state.auth.user);
+
   const menuItems = [
     { id: 'dashboard', label: 'Pharmacy Dashboard', icon: LayoutDashboard },
     { id: 'pos', label: 'Point of Sale (POS)', icon: ShoppingCart, badge: 'Counter', action: onOpenPos },
@@ -38,6 +45,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'branches', label: 'Multi-Branch Outlets', icon: GitBranch, badge: '2 Active' },
     { id: 'reports', label: 'Sales & Margin Reports', icon: BarChart3 },
   ];
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
+  };
 
   return (
     <aside className="w-68 bg-slate-950 text-white flex flex-col h-screen sticky top-0 border-r border-slate-800 shrink-0 select-none overflow-hidden z-20">
@@ -61,7 +73,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="bg-slate-950 rounded-xl p-2.5 border border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-            <div className="text-[11px] font-semibold text-slate-200 truncate">Main Hospital Branch</div>
+            <div className="text-[11px] font-semibold text-slate-200 truncate">
+              {user?.branchName || 'Main Hospital Branch'}
+            </div>
           </div>
           <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/20 px-1.5 py-0.5 rounded shrink-0">
             Outlet #1
@@ -112,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      {/* User & Settings Footer */}
+      {/* User & Logout Footer */}
       <div className="p-3 border-t border-slate-800 space-y-2 bg-slate-950 shrink-0">
         <div className="flex items-center justify-between px-2 py-1">
           <div className="flex items-center gap-2">
@@ -120,25 +134,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="text-[11px] text-slate-300 font-medium">POS Online (v1.0.0)</span>
           </div>
           <button
-            title="Settings"
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer"
+            onClick={handleLogout}
+            title="লগআউট (Logout)"
+            className="text-slate-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors"
           >
-            <Settings className="h-3.5 w-3.5" />
+            <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>
 
         <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+            src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
             alt="User"
             className="h-7 w-7 rounded-full object-cover ring-1 ring-primary"
           />
           <div className="text-left overflow-hidden">
             <div className="text-xs font-semibold text-white truncate flex items-center gap-1">
-              Dr. Sohel Sagor
+              {user?.name || 'Dr. Sohel Sagor'}
               <ShieldCheck className="h-3 w-3 text-emerald-400 shrink-0" />
             </div>
-            <div className="text-[10px] text-slate-400 truncate">Super Admin / Pharmacist</div>
+            <div className="text-[10px] text-slate-400 truncate">
+              {user?.role || 'Chief Pharmacist'}
+            </div>
           </div>
         </div>
       </div>

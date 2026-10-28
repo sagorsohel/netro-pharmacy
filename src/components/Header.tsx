@@ -1,9 +1,11 @@
 import React from 'react';
-import { Search, Bell, ShoppingCart, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Bell, ShoppingCart, Plus, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setSearchQuery } from '../store/slices/inventorySlice';
+import { logout } from '../store/slices/authSlice';
 
 interface HeaderProps {
   onOpenPos: () => void;
@@ -12,7 +14,14 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenPos, onOpenStockIn }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const searchQuery = useAppSelector((state) => state.inventory.searchQuery);
+  const user = useAppSelector((state) => state.auth.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
+  };
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs shrink-0">
@@ -65,13 +74,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPos, onOpenStockIn }) => {
 
         <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
 
-        {/* Profile */}
-        <div className="flex items-center gap-2.5">
+        {/* Profile & Quick Logout */}
+        <div className="flex items-center gap-2">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+            src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
             alt="Profile"
             className="h-8 w-8 rounded-full object-cover ring-2 ring-primary/30"
           />
+          <button
+            onClick={handleLogout}
+            title="লগআউট"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 cursor-pointer transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </header>
