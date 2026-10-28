@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { login } from '../store/slices/authSlice';
+import React, { useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { loginSuccess } from "../store/slices/authSlice";
 import {
   ShoppingCart,
   ShieldCheck,
@@ -12,64 +12,80 @@ import {
   Boxes,
   CheckCircle2,
   Sparkles,
-  Receipt
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+  Receipt,
+  AlertCircle,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useLoginMutation } from '../store/api/authApi';
 
 export const LoginView: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const [loginMutation, { isLoading: isLoginLoading }] = useLoginMutation();
 
-  const [email, setEmail] = useState('pharmacist@netropharma.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('pharmarcy@netro.com');
+  const [password, setPassword] = useState('12345678');
   const [rememberMe, setRememberMe] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const isLoading = isLoginLoading;
 
   // If already authenticated, redirect to /dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const performLogin = async (loginEmail: string, loginPass: string) => {
+    setError('');
+
+    try {
+      const data = await loginMutation({
+        email: loginEmail.trim(),
+        password: loginPass,
+      }).unwrap();
+
+      if (!data.success || !data.token) {
+        throw new Error(data.message || 'Invalid email or password.');
+      }
+
+      dispatch(
+        loginSuccess({
+          user: data.user,
+          token: data.token,
+        })
+      );
+
+      navigate('/dashboard');
+    } catch (err: any) {
+      const message =
+        err?.data?.message ||
+        err?.message ||
+        'Failed to connect to backend server. Make sure port 5001 is active.';
+      setError(message);
+    }
+  };
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      setError('Please enter your email or username');
+      setError("Please enter your email or username");
       return;
     }
-    setError('');
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      dispatch(
-        login({
-          email,
-          name: 'Dr. Sohel Sagor',
-          role: 'Chief Pharmacist',
-          branchName: 'Main Hospital Pharmacy (Branch #1)',
-        })
-      );
-      navigate('/dashboard');
-    }, 400);
+    performLogin(email, password);
   };
 
-  const handleQuickDemo = (role: 'Chief Pharmacist' | 'Cashier') => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      dispatch(
-        login({
-          email: role === 'Chief Pharmacist' ? 'admin@netropharma.com' : 'cashier@netropharma.com',
-          name: role === 'Chief Pharmacist' ? 'Dr. Sohel Sagor' : 'Kazi Rafiqul (Cashier)',
-          role,
-          branchName: 'Main Hospital Pharmacy (Branch #1)',
-        })
-      );
-      navigate('/dashboard');
-    }, 300);
+  const handleQuickDemo = (role: "pharmacist" | "admin") => {
+    if (role === "pharmacist") {
+      setEmail("pharmarcy@netro.com");
+      setPassword("12345678");
+      performLogin("pharmarcy@netro.com", "12345678");
+    } else {
+      setEmail("admin@netro.com");
+      setPassword("12345678");
+      performLogin("admin@netro.com", "12345678");
+    }
   };
 
   return (
@@ -89,12 +105,16 @@ export const LoginView: React.FC = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-black tracking-tight text-white">NETRO</span>
+                  <span className="text-xl font-black tracking-tight text-white">
+                    NETRO
+                  </span>
                   <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/30 text-emerald-300 border border-primary/50">
                     PHARMA POS
                   </span>
                 </div>
-                <p className="text-xs text-slate-400">Inventory & Point of Sale System</p>
+                <p className="text-xs text-slate-400">
+                  Inventory & Point of Sale System
+                </p>
               </div>
             </div>
 
@@ -104,7 +124,8 @@ export const LoginView: React.FC = () => {
                 Modern Pharmacy & Point-of-Sale System
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Multi-unit stock conversion (Carton ➔ Strip ➔ Piece), FEFO expiry alerts, and fast WhatsApp invoicing.
+                Multi-unit stock conversion (Carton ➔ Strip ➔ Piece), FEFO
+                expiry alerts, and fast WhatsApp invoicing.
               </p>
             </div>
 
@@ -113,9 +134,12 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Boxes className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">Multi-Unit Stock Tracking</h4>
+                  <h4 className="text-xs font-semibold text-white">
+                    Multi-Unit Stock Tracking
+                  </h4>
                   <p className="text-[11px] text-slate-300">
-                    Automatic carton, strip, and piece conversions with live stock counts.
+                    Automatic carton, strip, and piece conversions with live
+                    stock counts.
                   </p>
                 </div>
               </div>
@@ -123,9 +147,12 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Receipt className="h-5 w-5 text-sky-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">Counter POS & Digital Billing</h4>
+                  <h4 className="text-xs font-semibold text-white">
+                    Counter POS & Digital Billing
+                  </h4>
                   <p className="text-[11px] text-slate-300">
-                    Direct digital PDF invoices via WhatsApp and SMS receipt delivery.
+                    Direct digital PDF invoices via WhatsApp and SMS receipt
+                    delivery.
                   </p>
                 </div>
               </div>
@@ -133,9 +160,12 @@ export const LoginView: React.FC = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
                 <Pill className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-semibold text-white">FEFO Expiry Monitoring</h4>
+                  <h4 className="text-xs font-semibold text-white">
+                    FEFO Expiry Monitoring
+                  </h4>
                   <p className="text-[11px] text-slate-300">
-                    Automated expiry alerts and low-stock replenishment notifications.
+                    Automated expiry alerts and low-stock replenishment
+                    notifications.
                   </p>
                 </div>
               </div>
@@ -145,7 +175,8 @@ export const LoginView: React.FC = () => {
           {/* Left Footer */}
           <div className="pt-6 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> Branch #1 Ready
+              <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> Neon DB +
+              Drizzle Connected
             </span>
             <span className="text-slate-500">v1.0.0 Stable</span>
           </div>
@@ -157,10 +188,10 @@ export const LoginView: React.FC = () => {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-primary border border-primary/20 mb-3">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span>Pharmacy Portal Access</span>
+                <span>Backend JWT Authentication</span>
               </div>
               <h3 className="text-2xl font-bold tracking-tight text-slate-900">
-                Pharmacist & Cashier Sign In
+                Pharmacist Sign In
               </h3>
               <p className="text-sm text-slate-500 mt-1">
                 Enter your credentials to access the pharmacy management system.
@@ -168,8 +199,9 @@ export const LoginView: React.FC = () => {
             </div>
 
             {error && (
-              <div className="p-3 text-xs bg-red-50 border border-red-200 text-red-700 rounded-xl">
-                {error}
+              <div className="p-3.5 text-xs bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{error}</span>
               </div>
             )}
 
@@ -177,13 +209,13 @@ export const LoginView: React.FC = () => {
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <Mail className="h-3.5 w-3.5 text-slate-400" />
-                  Email or Username
+                  Email Address
                 </label>
                 <Input
-                  type="text"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="pharmacist@netropharma.com"
+                  placeholder="pharmarcy@netro.com"
                   className="h-11 rounded-xl border-slate-200 focus:border-primary focus:ring-primary/20 text-sm"
                   required
                 />
@@ -199,7 +231,9 @@ export const LoginView: React.FC = () => {
                     href="#forgot"
                     onClick={(e) => {
                       e.preventDefault();
-                      alert('Please contact the system administrator to reset your password.');
+                      alert(
+                        "Default password for pharmarcy@netro.com is: 12345678",
+                      );
                     }}
                     className="text-xs text-secondary hover:underline font-medium"
                   >
@@ -224,7 +258,7 @@ export const LoginView: React.FC = () => {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="rounded border-slate-300 text-primary focus:ring-primary"
                   />
-                  <span>Remember me</span>
+                  <span>Remember me on this device</span>
                 </label>
               </div>
 
@@ -234,7 +268,7 @@ export const LoginView: React.FC = () => {
                 className="w-full h-11 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold text-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isLoading ? (
-                  <span className="flex items-center gap-2">Signing in...</span>
+                  <span className="flex items-center gap-2">Signing...</span>
                 ) : (
                   <>
                     <span>Enter Pharmacy Dashboard</span>
@@ -247,24 +281,24 @@ export const LoginView: React.FC = () => {
             {/* Quick Demo Access Bar */}
             <div className="pt-4 border-t border-slate-100">
               <div className="text-center text-xs text-slate-400 mb-3 font-medium">
-                — Or Quick 1-Click Demo Login —
+                — Or 1-Click Login with Verified Accounts —
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => handleQuickDemo('Chief Pharmacist')}
+                  onClick={() => handleQuickDemo("pharmacist")}
                   className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-primary/40 text-slate-700 hover:text-primary transition-all text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>Pharmacist Demo</span>
+                  <span>Pharmacy (pharmarcy@netro.com)</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleQuickDemo('Cashier')}
+                  onClick={() => handleQuickDemo("admin")}
                   className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:border-secondary/40 text-slate-700 hover:text-secondary transition-all text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Receipt className="h-4 w-4 text-secondary" />
-                  <span>Cashier Demo</span>
+                  <span>Admin (admin@netro.com)</span>
                 </button>
               </div>
             </div>

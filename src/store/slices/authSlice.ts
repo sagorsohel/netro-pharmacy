@@ -4,13 +4,15 @@ export interface PharmacyUser {
   id: string;
   name: string;
   email: string;
-  role: 'Chief Pharmacist' | 'Pharmacy Admin' | 'Cashier';
-  avatar: string;
-  branchName: string;
+  role: string;
+  avatar?: string;
+  branchName?: string;
+  phone?: string;
 }
 
 interface AuthState {
   isAuthenticated: boolean;
+  token: string | null;
   user: PharmacyUser | null;
 }
 
@@ -26,6 +28,7 @@ const savedAuth = (() => {
 
 const initialState: AuthState = savedAuth || {
   isAuthenticated: false,
+  token: null,
   user: null,
 };
 
@@ -33,36 +36,30 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (
+    loginSuccess: (
       state,
       action: PayloadAction<{
-        email: string;
-        name?: string;
-        role?: PharmacyUser['role'];
-        branchName?: string;
+        user: PharmacyUser;
+        token: string;
       }>
     ) => {
       state.isAuthenticated = true;
-      state.user = {
-        id: 'usr-pharma-01',
-        name: action.payload.name || 'Dr. Sohel Sagor',
-        email: action.payload.email,
-        role: action.payload.role || 'Chief Pharmacist',
-        avatar:
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-        branchName: action.payload.branchName || 'Main Hospital Pharmacy (Branch #1)',
-      };
+      state.token = action.payload.token;
+      state.user = action.payload.user;
       try {
         localStorage.setItem('netro_pharmacy_auth', JSON.stringify(state));
+        localStorage.setItem('token', action.payload.token);
       } catch {
         // ignore
       }
     },
     logout: (state) => {
       state.isAuthenticated = false;
+      state.token = null;
       state.user = null;
       try {
         localStorage.removeItem('netro_pharmacy_auth');
+        localStorage.removeItem('token');
       } catch {
         // ignore
       }
@@ -70,5 +67,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { loginSuccess, logout } = authSlice.actions;
 export default authSlice.reducer;
