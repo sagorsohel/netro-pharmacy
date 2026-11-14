@@ -75,9 +75,6 @@ export const POSPage: React.FC = () => {
   // Form State - Customer Details
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [customerAge, setCustomerAge] = useState('');
-  const [customerGender, setCustomerGender] = useState('Male');
-  const [customerBloodGroup, setCustomerBloodGroup] = useState('O+');
   const [customerAddress, setCustomerAddress] = useState('');
   const [refDoctor, setRefDoctor] = useState('');
   const [deliveryDate, setDeliveryDate] = useState('Immediate / Counter');
@@ -137,9 +134,6 @@ export const POSPage: React.FC = () => {
     setSelectedCustomer(c);
     setCustomerName(c.name);
     setCustomerPhone(c.phone);
-    setCustomerAge(c.age ? String(c.age) : '');
-    setCustomerGender(c.gender || 'Male');
-    setCustomerBloodGroup(c.bloodGroup || 'O+');
     setCustomerAddress(c.address || '');
     if (c.refDoctor) setRefDoctor(c.refDoctor);
     setCustomerSearchTerm(c.phone);
@@ -150,9 +144,6 @@ export const POSPage: React.FC = () => {
     setSelectedCustomer(null);
     setCustomerName('');
     setCustomerPhone('');
-    setCustomerAge('');
-    setCustomerGender('Male');
-    setCustomerBloodGroup('O+');
     setCustomerAddress('');
     setRefDoctor('');
     setCustomerSearchTerm('');
@@ -350,9 +341,6 @@ export const POSPage: React.FC = () => {
           await createCustomer({
             name: finalCustomerName,
             phone: finalPhone,
-            age: customerAge ? parseInt(customerAge, 10) : undefined,
-            gender: customerGender,
-            bloodGroup: customerBloodGroup,
             address: customerAddress.trim() || undefined,
             refDoctor: refDoctor.trim() || undefined,
           }).unwrap();
@@ -488,25 +476,36 @@ export const POSPage: React.FC = () => {
               <span className="font-mono text-[11px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
                 {selectedCustomer.customerCode || 'Registered Customer'}
               </span>
-              <span className="text-slate-500">
-                • {selectedCustomer.gender || 'Male'}, {selectedCustomer.age || 'N/A'} yrs •{' '}
-                {selectedCustomer.bloodGroup || 'Blood: N/A'}
-              </span>
               {selectedCustomer.address && (
                 <span className="text-slate-500 truncate max-w-xs">• {selectedCustomer.address}</span>
               )}
               <span className="text-slate-700 font-medium pl-1 border-l border-emerald-200">
                 Doc: {refDoctor || selectedCustomer.refDoctor || 'Counter Sale / Duty Doc'}
               </span>
-              <div className="flex items-center gap-1 pl-1 border-l border-emerald-200 text-emerald-950 font-semibold">
-                <Clock className="h-3 w-3 text-emerald-700" />
-                <span>Pickup:</span>
+              <div className="flex items-center gap-1.5 pl-1.5 border-l border-emerald-200 text-emerald-950 font-semibold">
+                <Clock className="h-3.5 w-3.5 text-emerald-700 shrink-0" />
+                <span className="text-[11px]">Delivery:</span>
                 <input
                   type="text"
                   value={deliveryDate}
                   onChange={(e) => setDeliveryDate(e.target.value)}
+                  placeholder="Immediate / Counter"
                   className="h-6 w-36 px-1.5 rounded border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden"
                 />
+                <button
+                  type="button"
+                  onClick={() => setDeliveryDate('Today 8:00 PM')}
+                  className="px-1.5 h-6 rounded border border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 text-[10px] font-semibold cursor-pointer shrink-0"
+                >
+                  Today
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
+                  className="px-1.5 h-6 rounded border border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 text-[10px] font-semibold cursor-pointer shrink-0"
+                >
+                  Tmrw
+                </button>
               </div>
             </div>
 
@@ -682,41 +681,46 @@ export const POSPage: React.FC = () => {
                 </div>
 
                 {/* Expected Delivery / Follow up */}
-                <div className="sm:col-span-3 flex items-center gap-1 bg-slate-50 p-0.5 rounded-lg border border-slate-200">
-                  <Clock className="h-3.5 w-3.5 text-emerald-600 ml-1 shrink-0" />
+                <div className="sm:col-span-3 flex items-center gap-1.5 bg-emerald-50/70 p-1 rounded-lg border border-emerald-300 shadow-2xs">
+                  <span className="text-[11px] font-bold text-emerald-950 shrink-0 flex items-center gap-1 pl-1">
+                    <Clock className="h-3.5 w-3.5 text-emerald-700" />
+                    <span>Delivery:</span>
+                  </span>
                   <input
                     type="text"
                     value={deliveryDate}
                     onChange={(e) => setDeliveryDate(e.target.value)}
-                    placeholder="Tomorrow 4:00 PM"
-                    className="w-full h-7 px-2 rounded-md bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:outline-hidden focus:border-emerald-500"
+                    placeholder="Immediate / Counter"
+                    className="w-full h-7 px-2 rounded-md border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden focus:border-emerald-600"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setDeliveryDate('Today 8:00 PM')}
-                    className={`px-1.5 h-7 rounded text-[10px] font-medium transition cursor-pointer shrink-0 ${
-                      deliveryDate === 'Today 8:00 PM'
-                        ? 'bg-emerald-700 text-white font-bold'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
-                    }`}
-                  >
-                    Today
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
-                    className={`px-1.5 h-7 rounded text-[10px] font-medium transition cursor-pointer shrink-0 ${
-                      deliveryDate === 'Tomorrow 4:00 PM'
-                        ? 'bg-emerald-700 text-white font-bold'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
-                    }`}
-                  >
-                    Tmrw
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setDeliveryDate('Today 8:00 PM')}
+                      className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
+                        deliveryDate === 'Today 8:00 PM'
+                          ? 'bg-emerald-700 text-white font-bold shadow-2xs'
+                          : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      }`}
+                    >
+                      Today
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
+                      className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
+                        deliveryDate === 'Tomorrow 4:00 PM'
+                          ? 'bg-emerald-700 text-white font-bold shadow-2xs'
+                          : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      }`}
+                    >
+                      Tmrw
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              /* New Customer Mode: 2 Tight Rows (Adds to this pharmacy only!) */
+              /* New Customer Mode: No Age, Gender or Blood Group */
               <div className="space-y-1.5 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
                   <input
@@ -725,7 +729,7 @@ export const POSPage: React.FC = () => {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder="Patient Full Name *"
-                    className="sm:col-span-3 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
+                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
                   />
                   <input
                     type="text"
@@ -733,45 +737,14 @@ export const POSPage: React.FC = () => {
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="Contact Phone *"
-                    className="sm:col-span-3 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden font-mono"
+                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden font-mono"
                   />
-                  <input
-                    type="number"
-                    min={0}
-                    value={customerAge}
-                    onChange={(e) => setCustomerAge(e.target.value)}
-                    placeholder="Age"
-                    className="sm:col-span-1 h-8.5 px-2 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
-                  />
-                  <select
-                    value={customerGender}
-                    onChange={(e) => setCustomerGender(e.target.value)}
-                    className="sm:col-span-1 h-8.5 px-2 rounded-lg border border-slate-300 bg-white text-xs"
-                  >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <select
-                    value={customerBloodGroup}
-                    onChange={(e) => setCustomerBloodGroup(e.target.value)}
-                    className="sm:col-span-1 h-8.5 px-2 rounded-lg border border-slate-300 bg-white text-xs font-mono"
-                  >
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                  </select>
                   <input
                     type="text"
                     value={customerAddress}
                     onChange={(e) => setCustomerAddress(e.target.value)}
-                    placeholder="Address / Location"
-                    className="sm:col-span-3 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
+                    placeholder="Address / Location (Optional)"
+                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
@@ -782,7 +755,7 @@ export const POSPage: React.FC = () => {
                     placeholder="-- Ref Doctor --"
                     className="sm:col-span-5 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
                   />
-                  <div className="sm:col-span-7 flex items-center gap-1.5 bg-emerald-50/90 p-1 rounded-lg border border-emerald-300 shadow-2xs">
+                  <div className="sm:col-span-7 flex items-center gap-1.5 bg-emerald-50/70 p-1 rounded-lg border border-emerald-300 shadow-2xs">
                     <span className="text-[11px] font-bold text-emerald-950 shrink-0 flex items-center gap-1 pl-1">
                       <Clock className="h-3.5 w-3.5 text-emerald-700" />
                       <span>Delivery:</span>
@@ -791,8 +764,8 @@ export const POSPage: React.FC = () => {
                       type="text"
                       value={deliveryDate}
                       onChange={(e) => setDeliveryDate(e.target.value)}
-                      placeholder="e.g. Tomorrow 4:00 PM, Today 8:00 PM"
-                      className="w-full h-7 px-2 rounded-md border border-emerald-300 bg-white text-xs font-bold text-emerald-950 focus:outline-hidden focus:border-emerald-600"
+                      placeholder="Immediate / Counter"
+                      className="w-full h-7 px-2 rounded-md border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden focus:border-emerald-600"
                     />
                     <div className="flex items-center gap-1 shrink-0">
                       <button

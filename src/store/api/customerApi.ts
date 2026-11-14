@@ -91,3 +91,4 @@ export const {
   useCreatePharmacyCustomerMutation,
   useUpdatePharmacyCustomerMutation,
 } = customerApi;
+
