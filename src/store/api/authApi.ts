@@ -1,54 +1,54 @@
 import { baseApi } from './baseApi';
-import type { PharmacyUser } from '../slices/authSlice';
+import type { PharmacyOutletInfo, PharmacyUser } from '../slices/authSlice';
 
-export interface LoginRequest {
-  email: string;
-  password?: string;
+export interface PharmacyLoginRequest {
+  pharmacyId: number;
+  phone: string;
+  password: string;
 }
 
-export interface LoginResponse {
+export interface PharmacyLoginResponse {
   success: boolean;
   message: string;
   token: string;
   user: PharmacyUser;
+  pharmacy: PharmacyOutletInfo;
 }
 
-export interface UserProfileResponse {
-  success: boolean;
-  data: PharmacyUser;
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
 }
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    pharmacyLogin: builder.mutation<PharmacyLoginResponse, PharmacyLoginRequest>({
       query: (credentials) => ({
-        url: '/auth/login',
+        url: '/pharmacy-auth/login',
         method: 'POST',
         body: credentials,
       }),
       invalidatesTags: ['Auth'],
     }),
-    getMe: builder.query<UserProfileResponse, void>({
-      query: () => '/auth/me',
+
+    getPharmacyMe: builder.query<{ success: boolean; data: { user: PharmacyUser; pharmacy: PharmacyOutletInfo } }, void>({
+      query: () => '/pharmacy-auth/me',
       providesTags: ['Auth'],
     }),
-    changePassword: builder.mutation<
-      { success: boolean; message: string },
-      { currentPassword: string; newPassword: string }
-    >({
+
+    changePassword: builder.mutation<{ success: boolean; message: string }, ChangePasswordRequest>({
       query: (body) => ({
-        url: '/auth/change-password',
-        method: 'PUT',
+        url: '/pharmacy-auth/change-password',
+        method: 'POST',
         body,
       }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {
-  useLoginMutation,
-  useGetMeQuery,
-  useLazyGetMeQuery,
+  usePharmacyLoginMutation,
+  useGetPharmacyMeQuery,
   useChangePasswordMutation,
 } = authApi;
