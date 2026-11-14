@@ -11,7 +11,6 @@ import {
   Receipt,
   CheckCircle2,
   Pill,
-  Clock,
   Printer,
   X,
   Phone,
@@ -76,8 +75,6 @@ export const POSPage: React.FC = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
-  const [refDoctor, setRefDoctor] = useState('');
-  const [deliveryDate, setDeliveryDate] = useState('Immediate / Counter');
 
   // Form State - Medicine Catalog Search
   const [medSearch, setMedSearch] = useState('');
@@ -135,7 +132,6 @@ export const POSPage: React.FC = () => {
     setCustomerName(c.name);
     setCustomerPhone(c.phone);
     setCustomerAddress(c.address || '');
-    if (c.refDoctor) setRefDoctor(c.refDoctor);
     setCustomerSearchTerm(c.phone);
     setIsCustomerDropdownOpen(false);
   };
@@ -145,7 +141,6 @@ export const POSPage: React.FC = () => {
     setCustomerName('');
     setCustomerPhone('');
     setCustomerAddress('');
-    setRefDoctor('');
     setCustomerSearchTerm('');
   };
 
@@ -342,7 +337,6 @@ export const POSPage: React.FC = () => {
             name: finalCustomerName,
             phone: finalPhone,
             address: customerAddress.trim() || undefined,
-            refDoctor: refDoctor.trim() || undefined,
           }).unwrap();
         } catch {
           // If already registered or minor warning, continue smoothly with invoice
@@ -365,8 +359,6 @@ export const POSPage: React.FC = () => {
         whatsappSent,
         smsSent: false,
         paymentMethod,
-        refDoctor: refDoctor.trim() || undefined,
-        deliveryDate,
         items: cartItems.map((item) => ({
           medicineId: item.medicineId,
           name: item.name,
@@ -477,36 +469,8 @@ export const POSPage: React.FC = () => {
                 {selectedCustomer.customerCode || 'Registered Customer'}
               </span>
               {selectedCustomer.address && (
-                <span className="text-slate-500 truncate max-w-xs">• {selectedCustomer.address}</span>
+                <span className="text-slate-500 truncate max-w-sm">• {selectedCustomer.address}</span>
               )}
-              <span className="text-slate-700 font-medium pl-1 border-l border-emerald-200">
-                Doc: {refDoctor || selectedCustomer.refDoctor || 'Counter Sale / Duty Doc'}
-              </span>
-              <div className="flex items-center gap-1.5 pl-1.5 border-l border-emerald-200 text-emerald-950 font-semibold">
-                <Clock className="h-3.5 w-3.5 text-emerald-700 shrink-0" />
-                <span className="text-[11px]">Delivery:</span>
-                <input
-                  type="text"
-                  value={deliveryDate}
-                  onChange={(e) => setDeliveryDate(e.target.value)}
-                  placeholder="Immediate / Counter"
-                  className="h-6 w-36 px-1.5 rounded border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => setDeliveryDate('Today 8:00 PM')}
-                  className="px-1.5 h-6 rounded border border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 text-[10px] font-semibold cursor-pointer shrink-0"
-                >
-                  Today
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
-                  className="px-1.5 h-6 rounded border border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 text-[10px] font-semibold cursor-pointer shrink-0"
-                >
-                  Tmrw
-                </button>
-              </div>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
@@ -601,198 +565,99 @@ export const POSPage: React.FC = () => {
 
             {/* Existing Patient Search Row */}
             {intakeMode === 'existing' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
-                <div ref={customerSearchRef} className="sm:col-span-6 relative">
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-emerald-600 pointer-events-none" />
-                    <input
-                      type="text"
-                      value={customerSearchTerm}
-                      onChange={(e) => {
-                        setCustomerSearchTerm(e.target.value);
-                        setIsCustomerDropdownOpen(true);
-                      }}
-                      onFocus={() => setIsCustomerDropdownOpen(true)}
-                      placeholder="Type phone number (017...), patient ID (P-1001), or name..."
-                      className="w-full h-8.5 pl-9 pr-8 rounded-lg border border-slate-300 focus:border-emerald-500 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:outline-hidden transition shadow-2xs"
-                    />
-                    {customerSearchTerm && (
-                      <button
-                        type="button"
-                        onClick={handleClearCustomer}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Instant Floating Dropdown Scoped to THIS Pharmacy */}
-                  {isCustomerDropdownOpen && customerSearchTerm.trim().length > 0 && (
-                    <div className="absolute left-0 right-0 top-full mt-1 bg-white rounded-xl border border-slate-200 shadow-xl max-h-56 overflow-y-auto z-40 p-1.5 space-y-1">
-                      {isCustomersLoading ? (
-                        <div className="py-4 text-center text-xs text-slate-500">Searching pharmacy records...</div>
-                      ) : matchedCustomers.length === 0 ? (
-                        <div className="py-3 px-2 text-center text-xs text-slate-500">
-                          <span>No patient found in this pharmacy matching "{customerSearchTerm}". </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setIntakeMode('new');
-                              setCustomerPhone(customerSearchTerm);
-                              setIsCustomerDropdownOpen(false);
-                            }}
-                            className="text-emerald-700 font-medium hover:underline cursor-pointer"
-                          >
-                            + Register New
-                          </button>
-                        </div>
-                      ) : (
-                        matchedCustomers.map((c) => (
-                          <div
-                            key={c.id}
-                            onClick={() => handlePickCustomer(c)}
-                            className="p-2 rounded-lg hover:bg-slate-50 transition cursor-pointer flex items-center justify-between gap-2 text-xs"
-                          >
-                            <div className="min-w-0">
-                              <span className="font-semibold text-slate-900 mr-2">{c.name}</span>
-                              <span className="font-mono text-emerald-700 font-medium mr-2">{c.phone}</span>
-                              <span className="font-mono text-[10px] text-slate-500">#{c.customerCode || 'N/A'}</span>
-                            </div>
-                            <span className="text-[11px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200 shrink-0">
-                              Select
-                            </span>
-                          </div>
-                        ))
-                      )}
-                    </div>
+              <div ref={customerSearchRef} className="w-full relative">
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-emerald-600 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={customerSearchTerm}
+                    onChange={(e) => {
+                      setCustomerSearchTerm(e.target.value);
+                      setIsCustomerDropdownOpen(true);
+                    }}
+                    onFocus={() => setIsCustomerDropdownOpen(true)}
+                    placeholder="Type phone number (017...), patient ID (P-1001), or name..."
+                    className="w-full h-9 pl-9 pr-8 rounded-lg border border-slate-300 focus:border-emerald-500 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:outline-hidden transition shadow-2xs"
+                  />
+                  {customerSearchTerm && (
+                    <button
+                      type="button"
+                      onClick={handleClearCustomer}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
                   )}
                 </div>
 
-                {/* Ref Doctor Input */}
-                <div className="sm:col-span-3">
-                  <input
-                    type="text"
-                    value={refDoctor}
-                    onChange={(e) => setRefDoctor(e.target.value)}
-                    placeholder="-- Ref Doctor --"
-                    className="w-full h-8.5 px-3 rounded-lg border border-slate-300 focus:border-emerald-500 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:outline-hidden"
-                  />
-                </div>
-
-                {/* Expected Delivery / Follow up */}
-                <div className="sm:col-span-3 flex items-center gap-1.5 bg-emerald-50/70 p-1 rounded-lg border border-emerald-300 shadow-2xs">
-                  <span className="text-[11px] font-bold text-emerald-950 shrink-0 flex items-center gap-1 pl-1">
-                    <Clock className="h-3.5 w-3.5 text-emerald-700" />
-                    <span>Delivery:</span>
-                  </span>
-                  <input
-                    type="text"
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    placeholder="Immediate / Counter"
-                    className="w-full h-7 px-2 rounded-md border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden focus:border-emerald-600"
-                  />
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryDate('Today 8:00 PM')}
-                      className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
-                        deliveryDate === 'Today 8:00 PM'
-                          ? 'bg-emerald-700 text-white font-bold shadow-2xs'
-                          : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
-                      }`}
-                    >
-                      Today
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
-                      className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
-                        deliveryDate === 'Tomorrow 4:00 PM'
-                          ? 'bg-emerald-700 text-white font-bold shadow-2xs'
-                          : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
-                      }`}
-                    >
-                      Tmrw
-                    </button>
+                {/* Instant Floating Dropdown Scoped to THIS Pharmacy */}
+                {isCustomerDropdownOpen && customerSearchTerm.trim().length > 0 && (
+                  <div className="absolute left-0 right-0 top-full mt-1 bg-white rounded-xl border border-slate-200 shadow-xl max-h-56 overflow-y-auto z-40 p-1.5 space-y-1">
+                    {isCustomersLoading ? (
+                      <div className="py-4 text-center text-xs text-slate-500">Searching pharmacy records...</div>
+                    ) : matchedCustomers.length === 0 ? (
+                      <div className="py-3 px-2 text-center text-xs text-slate-500">
+                        <span>No patient found in this pharmacy matching "{customerSearchTerm}". </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIntakeMode('new');
+                            setCustomerPhone(customerSearchTerm);
+                            setIsCustomerDropdownOpen(false);
+                          }}
+                          className="text-emerald-700 font-medium hover:underline cursor-pointer"
+                        >
+                          + Register New
+                        </button>
+                      </div>
+                    ) : (
+                      matchedCustomers.map((c) => (
+                        <div
+                          key={c.id}
+                          onClick={() => handlePickCustomer(c)}
+                          className="p-2 rounded-lg hover:bg-slate-50 transition cursor-pointer flex items-center justify-between gap-2 text-xs"
+                        >
+                          <div className="min-w-0">
+                            <span className="font-semibold text-slate-900 mr-2">{c.name}</span>
+                            <span className="font-mono text-emerald-700 font-medium mr-2">{c.phone}</span>
+                            <span className="font-mono text-[10px] text-slate-500">#{c.customerCode || 'N/A'}</span>
+                            {c.address && <span className="text-[10px] text-slate-400 ml-2">• {c.address}</span>}
+                          </div>
+                          <span className="text-[11px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200 shrink-0">
+                            Select
+                          </span>
+                        </div>
+                      ))
+                    )}
                   </div>
-                </div>
+                )}
               </div>
             ) : (
-              /* New Customer Mode: No Age, Gender or Blood Group */
-              <div className="space-y-1.5 text-xs">
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
-                  <input
-                    type="text"
-                    required
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder="Patient Full Name *"
-                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
-                  />
-                  <input
-                    type="text"
-                    required
-                    value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
-                    placeholder="Contact Phone *"
-                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden font-mono"
-                  />
-                  <input
-                    type="text"
-                    value={customerAddress}
-                    onChange={(e) => setCustomerAddress(e.target.value)}
-                    placeholder="Address / Location (Optional)"
-                    className="sm:col-span-4 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
-                  <input
-                    type="text"
-                    value={refDoctor}
-                    onChange={(e) => setRefDoctor(e.target.value)}
-                    placeholder="-- Ref Doctor --"
-                    className="sm:col-span-5 h-8.5 px-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
-                  />
-                  <div className="sm:col-span-7 flex items-center gap-1.5 bg-emerald-50/70 p-1 rounded-lg border border-emerald-300 shadow-2xs">
-                    <span className="text-[11px] font-bold text-emerald-950 shrink-0 flex items-center gap-1 pl-1">
-                      <Clock className="h-3.5 w-3.5 text-emerald-700" />
-                      <span>Delivery:</span>
-                    </span>
-                    <input
-                      type="text"
-                      value={deliveryDate}
-                      onChange={(e) => setDeliveryDate(e.target.value)}
-                      placeholder="Immediate / Counter"
-                      className="w-full h-7 px-2 rounded-md border border-emerald-300 bg-white text-xs font-semibold text-emerald-950 focus:outline-hidden focus:border-emerald-600"
-                    />
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setDeliveryDate('Today 8:00 PM')}
-                        className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
-                          deliveryDate === 'Today 8:00 PM'
-                            ? 'bg-emerald-700 text-white font-bold shadow-2xs'
-                            : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
-                        }`}
-                      >
-                        Today
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeliveryDate('Tomorrow 4:00 PM')}
-                        className={`px-2 h-7 rounded text-[10px] font-medium transition cursor-pointer ${
-                          deliveryDate === 'Tomorrow 4:00 PM'
-                            ? 'bg-emerald-700 text-white font-bold shadow-2xs'
-                            : 'bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
-                        }`}
-                      >
-                        Tmrw
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              /* New Customer Mode: Clean 1 Row (Name, Phone, Address only) */
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs">
+                <input
+                  type="text"
+                  required
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="Patient Full Name *"
+                  className="sm:col-span-4 h-9 px-3 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
+                />
+                <input
+                  type="text"
+                  required
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  placeholder="Contact Phone *"
+                  className="sm:col-span-4 h-9 px-3 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden font-mono"
+                />
+                <input
+                  type="text"
+                  value={customerAddress}
+                  onChange={(e) => setCustomerAddress(e.target.value)}
+                  placeholder="Address / Location (Optional)"
+                  className="sm:col-span-4 h-9 px-3 rounded-lg border border-slate-300 focus:border-emerald-500 focus:outline-hidden"
+                />
               </div>
             )}
           </div>
