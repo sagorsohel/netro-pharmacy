@@ -23,6 +23,9 @@ export interface PharmacyInvoice {
   discountAmount?: string | number;
   discountPercentage?: string | number;
   grandTotal: string | number;
+  paidAmount?: string | number | null;
+  dueAmount?: string | number | null;
+  paymentMethod?: string | null;
   status: string;
   whatsappSent?: boolean;
   smsSent?: boolean;
@@ -40,6 +43,9 @@ export interface CreateInvoicePayload {
   discountAmount?: number | string;
   discountPercentage?: number | string;
   grandTotal: number | string;
+  paidAmount?: number | string;
+  dueAmount?: number | string;
+  paymentMethod?: string;
   status?: string;
   whatsappSent?: boolean;
   smsSent?: boolean;

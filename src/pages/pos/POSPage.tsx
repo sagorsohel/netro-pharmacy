@@ -24,6 +24,7 @@ import {
   type PharmacyCustomer,
 } from '../../store/api/customerApi';
 import { useAppSelector } from '../../store/hooks';
+import { printPharmacySlip } from '../../utils/printPharmacySlip';
 
 export interface CartMedicineItem {
   medicineId: string;
@@ -98,6 +99,7 @@ export const POSPage: React.FC = () => {
     invoiceNo: string;
     invoiceId: string;
     customerName: string;
+    invoice: any;
   } | null>(null);
 
   // Outside click handlers for floating dropdowns
@@ -381,10 +383,13 @@ export const POSPage: React.FC = () => {
           invoiceNo: res.data.invoiceNo,
           invoiceId: res.data.id,
           customerName: finalCustomerName,
+          invoice: res.data,
         });
         setCartItems([]);
         setDiscountVal(0);
         setPaidAmount('');
+        // Automatically open the print slip window with reference layout
+        printPharmacySlip(res.data, pharmacy);
       }
     } catch (err: any) {
       console.error('POS Checkout error:', err);
@@ -408,12 +413,19 @@ export const POSPage: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => navigate(`/invoices/${successInfo.invoiceId}`)}
+              onClick={() => printPharmacySlip(successInfo.invoice, pharmacy)}
               type="button"
               className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium shadow-2xs cursor-pointer transition-colors"
             >
               <Printer className="h-3.5 w-3.5" />
-              <span>Print Memo / Slip</span>
+              <span>Print Cash Memo / Slip</span>
+            </button>
+            <button
+              onClick={() => navigate(`/invoices/${successInfo.invoiceId}`)}
+              type="button"
+              className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+            >
+              View Memo
             </button>
             <button
               onClick={() => setSuccessInfo(null)}
