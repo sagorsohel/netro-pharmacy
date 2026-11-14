@@ -29,3 +29,4 @@ export const PharmacyLayout: React.FC = () => {
 };
 
 export default PharmacyLayout;
+
